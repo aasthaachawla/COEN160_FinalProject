@@ -6,12 +6,6 @@ import java.util.Scanner;
 
 public class ValidationCheck {
     public HashSet<Character> set = new HashSet<>();
-    String wordInput;
-
-    /* Constructor for Other Classes to pass in Word Input */
-    public ValidationCheck(String word) {
-        wordInput = word;
-    }
 
     /* Insert Characters into Validation Set*/
     public void insert(String word){
@@ -60,9 +54,9 @@ public class ValidationCheck {
 
     public static void main(String[] args) {
         // Initialize Validation with input word
-        ValidationCheck vc = new ValidationCheck("altred");
+        ValidationCheck vc = new ValidationCheck();
         // Insert letters into validation set
-        vc.insert(vc.wordInput);
+        vc.insert("altred");
 
         Scanner sc = new Scanner(System.in);
         int flag = 1;
