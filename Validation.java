@@ -21,7 +21,7 @@ public class Validation {
     }
 
     /* Determines if User has inputted letters only from validation set*/
-    public boolean wordExists(String word) {
+    public boolean inputValid(String word) {
         if(word == null || word.length() == 0 || word.equals("")) return false;
         for(int i = 0; i < word.length(); i++) {
             if(!set.contains(word.charAt(i))) return false;
@@ -30,7 +30,7 @@ public class Validation {
     }
 
     /* Check if user word input is an english word in the dictionary */
-    public boolean check_for_word(String word) {
+    public boolean wordExistsInDictionary(String word) {
         // System.out.println(word);
         try {
             BufferedReader in = new BufferedReader(new FileReader(
@@ -51,7 +51,7 @@ public class Validation {
 
     /* Check if Valid Word */
     public boolean isValid(String word) {
-        return wordExists(word) && check_for_word(word);
+        return inputValid(word) && wordExistsInDictionary(word);
     }
 
     /* Return points based on the length of word */
