@@ -9,9 +9,9 @@ public class Validation {
     String wordInput;
 
     /* Constructor for Other Classes to pass in Word Input */
-    // public Validation(String word) {
-    //     wordInput = word;
-    // }
+    public Validation(String word) {
+        wordInput = word;
+    }
 
     /* Insert Characters into Validation Set*/
     public void insert(String word){
@@ -38,7 +38,7 @@ public class Validation {
             String str;
             while ((str = in.readLine()) != null) {
                 if (str.indexOf(word) != -1 && str.equals(word)) {
-                    System.out.println("String: " + str + " at Index: " + str.indexOf(word));
+                    // System.out.println("String: " + str + " at Index: " + str.indexOf(word));
                     return true;
                 }
             }
@@ -60,13 +60,10 @@ public class Validation {
     }
 
     public static void main(String[] args) {
-        Validation vc = new Validation();
-        // list of words users will see in the game
-        String[] keys = {"alterd"};
-
-        for(int i = 0; i < keys.length; i++) {
-            vc.insert(keys[i]);
-        }
+        // Initialize Validation with input word
+        Validation vc = new Validation("altred");
+        // Insert letters into validation set
+        vc.insert(vc.wordInput);
 
         Scanner sc = new Scanner(System.in);
         int flag = 1;
