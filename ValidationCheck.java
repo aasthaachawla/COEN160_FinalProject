@@ -1,101 +1,76 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Scanner;
 
 public class ValidationCheck {
-    public final static int ALPHABET_SIZE = 26;
-	private TrieNode root;
-	
-    /* Class Constrcutor */
-	public ValidationCheck() {
-		root = new TrieNode('\0');
-	}
-	
-    /* Nested TrieNode Class */
-	public class TrieNode {
-		public char c;
-		public boolean isWord;
-		public TrieNode[] children;
+    public HashSet<Character> set = new HashSet<>();
+    String wordInput;
 
-		// TrieNode Constructor 
-		public TrieNode(char c) {
-			this.c = c;
-			isWord = false;
-			children = new TrieNode[ALPHABET_SIZE];
-		}
-	};
-	
-    /* Insert word into Trie */
-	public void insert(String word) {
-		TrieNode curr = root;
-		
-		// iterate through all characters
-		for(int i = 0; i < word.length(); i++) {
-			// extract character
-			char c = word.charAt(i);
-			//check if curr already has a node created at char c
-			int index = c - 'a';
-			if(curr.children[index] == null) {
-				curr.children[index] = new TrieNode(c);
-			}
-			//moving down the chain inside trie
-			curr = curr.children[index];
-		}
-		
-		// very last character needs to be marked as true 
-		curr.isWord = true;
-	}
-
-    /* Helper Function: Determines if word is in the Trie*/
-    private TrieNode getNode(String word) {
-        // set current node to root
-        TrieNode curr = root;
-        // traversing to end of Trie
-        for(int i = 0; i < word.length(); i++) {
-            char c = word.charAt(i);
-            // if trie does not have the character -> word does not exist
-            if(curr.children[c-'a'] == null) return null;
-            curr = curr.children[c-'a'];
-        }
-        // last character in the word
-        return curr;
+    /* Constructor for Other Classes to pass in Word Input */
+    public ValidationCheck(String word) {
+        wordInput = word;
     }
 
-    // returns if word is in the Trie
-    public boolean wordExists(String word) {
-        TrieNode temp = getNode(word);
-        return temp != null;
-    }
-
-    // return if any word that starts with given prefix
-    public boolean startsWith(String prefix) {
-        return getNode(prefix) != null;
-    }
-
-    public static void main(String[] args) {
-        ValidationCheck vc = new ValidationCheck();
-        // list of words users will see in the game
-        String[] keys = {"hello"};
-        String word = "hello";
-        HashSet<Character> set = new HashSet<>();
+    /* Insert Characters into Validation Set*/
+    public void insert(String word){
         for(int i = 0; i < word.length(); i++) {
             set.add(word.charAt(i));
         }
-        
-        // adding words to trie
-        for(int i = 0; i < keys.length; i++) {
-            vc.insert(keys[i]);
+    }
+
+    /* Determines if User has inputted letters only from validation set*/
+    public boolean inputValid(String word) {
+        if(word == null || word.length() == 0 || word.equals("")) return false;
+        for(int i = 0; i < word.length(); i++) {
+            if(!set.contains(word.charAt(i))) return false;
         }
+        return true;
+    }
+
+    /* Check if user word input is an english word in the dictionary */
+    public boolean wordExistsInDictionary(String word) {
+        // System.out.println(word);
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(
+                    "words_alpha.txt"));
+            String str;
+            while ((str = in.readLine()) != null) {
+                if (str.indexOf(word) != -1 && str.equals(word)) {
+                    // System.out.println("String: " + str + " at Index: " + str.indexOf(word));
+                    return true;
+                }
+            }
+            in.close();
+        } catch (IOException e) {
+        }
+
+        return false;
+    }
+
+    /* Check if Valid Word */
+    public boolean isValid(String word) {
+        return inputValid(word) && wordExistsInDictionary(word);
+    }
+
+    /* Return points based on the length of word */
+    public int assignPoints(String word) {
+        return word.length();
+    }
+
+    public static void main(String[] args) {
+        // Initialize Validation with input word
+        ValidationCheck vc = new ValidationCheck("altred");
+        // Insert letters into validation set
+        vc.insert(vc.wordInput);
 
         Scanner sc = new Scanner(System.in);
-		System.out.println("Enter word: ");
-	    String temp = sc.nextLine();
-
-        for(int j = 0; j < temp.length(); j++) {
-            char c = temp.charAt(j);
-            if(!set.contains(c)) System.out.println("false");
+        int flag = 1;
+        while(flag != 0) {
+            System.out.println("Enter word: ");
+            String temp = sc.nextLine();
+            System.out.println(vc.isValid(temp));
         }
-        System.out.println("true");
-        // System.out.println(vc.wordExists(temp));
-
     }
 }
