@@ -22,7 +22,8 @@ public class ValidationCheck {
 
     /* Determines if User has inputted letters only from validation set*/
     public boolean inputValid(String word) {
-        if(word == null || word.length() == 0 || word.equals("")) return false;
+        // Check to see if the word is at least 3 characters 
+        if(word == null || word.length() < 3 || word.equals("")) return false;
         for(int i = 0; i < word.length(); i++) {
             if(!set.contains(word.charAt(i))) return false;
         }
@@ -31,7 +32,6 @@ public class ValidationCheck {
 
     /* Check if user word input is an english word in the dictionary */
     public boolean wordExistsInDictionary(String word) {
-        // System.out.println(word);
         try {
             BufferedReader in = new BufferedReader(new FileReader(
                     "words_alpha.txt"));
@@ -45,7 +45,6 @@ public class ValidationCheck {
             in.close();
         } catch (IOException e) {
         }
-
         return false;
     }
 
