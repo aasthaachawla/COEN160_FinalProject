@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +11,7 @@ public class GameManager {
     private int score;
     private int boardCounter;
     private Timer totalTime;
+    private String currWord;
 
     private ValidationCheck vc;
     private ArrayList<String> keys;
@@ -28,23 +31,26 @@ public class GameManager {
         // TODO: make a timer
         totalTime = new Timer();
         
-        // TODO: Create random number to generate key value 
-       
-        int random = 84758934;
-        String tmp = keys[0];
-        vc.insert(tmp);
+        // Randomly select a word from List of sample words
+        int random = generateRandomNumber();
+        currWord = keys.get(random);
+        vc.insert(currWord);
         // remove this key from the arraylist when its used 
     }
 
+    public int generateRandomNumber(){
+        Random rand = new Random(); //instance of random class
+        
+        //generate random values from 0 to size of list
+        int randomInt = rand.nextInt(keys.size()); 
+        return randomInt;
+    }
     public void initializeKeys(){
         keys.add("altred");
-        keys.add("");
-    }
-
-    public void updateValidationCheck(){
-        vc.remove(keys[0]); // whatever random value we stored initially
-        // TODO: update random value 
-        vc.insert(keys[0]);
+        keys.add("hello");
+        keys.add("good");
+        keys.add("morning");
+        keys.add("toyou");
     }
 
     public void startGame(){
@@ -78,12 +84,35 @@ public class GameManager {
         window.setVisible(true);
     }
 
+    public void updateWord(){
+        // remove current word on board
+        keys.remove(currWord);
+        // remove letters from validation set
+        vc.removeCharacters();
+        // set current word to newly generated word 
+        currWord = keys.get(generateRandomNumber());
+        // insert into validation set to allow for checks
+        vc.insert(currWord);
+    }
+
     public void resetBoard() {
         boardCounter++;
         if(boardCounter == 3) score -= 5;
+        // set board to new word 
+        updateWord();
     }
 
-    // METHOD to track score and increase
+    // For a specific word, user scores increases by x amt of points
+    public void updateUserScore(String input){
+        int currentSum = player.getCurrScore();
+        currentSum  += vc.assignPoints(input);
+        player.setCurrScore(currentSum);
+    }
+
+    // Returns player's score at the end of the game
+    public int finalGameScore(){
+        return player.getCurrScore();
+    }
 
     public boolean validateWord(String input) {
         // call ValidationCheck to verify the inputted word matches all the criteria:
@@ -91,9 +120,6 @@ public class GameManager {
             // word is a valid dictionary word
             // word is at least three letters
        
-        
-        // Insert letters into validation set
-        vc.insert(vc.wordInput);
         return vc.isValid(input);
     }
 

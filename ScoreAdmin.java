@@ -1,12 +1,12 @@
 public class ScoreAdmin {
     int newScore;
-    int newLevel;
+    String newLevel;
 
     public void updateScore(User obj) {
-        obj.currScore = newScore;
+        obj.setCurrScore(newScore);
     }
 
     public void updateUserLevel(User obj) {
-        obj.userLevel = newLevel;
+        obj.setUserLevel(newLevel);
     }
 }

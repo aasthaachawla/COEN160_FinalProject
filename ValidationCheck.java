@@ -47,6 +47,11 @@ public class ValidationCheck {
         return inputValid(word) && wordExistsInDictionary(word);
     }
 
+    /* Reset Validation Check to empty Set */
+    public void removeCharacters() {
+        set.clear();
+    }
+
     /* Return points based on the length of word */
     public int assignPoints(String word) {
         return word.length();
