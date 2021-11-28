@@ -8,9 +8,7 @@ import java.awt.event.*;
 
 public class GameManager {
     private User player;
-    //private String name;
     private String userLevel;
-    //private int score;
     private int boardCounter;
     private Timer timer;
     private String currWord;
@@ -38,18 +36,16 @@ public class GameManager {
 
     public GameManager(User player) {
         this.player = player;
-        //name = player.getName();
-        //score = player.getCurrScore();
         userLevel = player.getUserLevel();
         boardCounter = 0;
         keys = new ArrayList<String>();
         vc = new ValidationCheck();
 
         // Randomly select a word from List of sample words
-        // int random = generateRandomNumber();
-        // currWord = keys.get(random);
-        // vc.insert(currWord);
-        // remove this key from the arraylist when its used 
+        initializeKeys();
+        int random = generateRandomNumber();
+        currWord = keys.get(random);
+        vc.insert(currWord);
     }
 
     public int generateRandomNumber(){
@@ -63,13 +59,15 @@ public class GameManager {
     }
     public void initializeKeys(){
         keys.add("altred");
-        keys.add("hello");
-        keys.add("good");
-        keys.add("morning");
-        keys.add("toyou");
+        keys.add("trasthig"); // straight
+        keys.add("copiduce"); // occupied
+        keys.add("bacgikn");
+        keys.add("daginot");
+        // keys.add("DAGINOT");
+        // keys.add("DAGINOT");
     }
 
-    public void startGame(){
+    public void buildUser() {
         buildGUI();
         // new User, send a JOptionPane to create this user.
         String getUserInput = JOptionPane.showInputDialog(topPanel, "Enter your name.");
@@ -80,15 +78,34 @@ public class GameManager {
         else {
             // TODO: retrieve User player and see if they exist
             player.setName(getUserInput);
+            FileManager fm = new FileManager();
+            fm.deserialize(player);
+            // 
             nameField.setText("Name: " + player.getName());
             scoreField.setText("Score: " + player.getCurrScore());
         }
-        // TODO: set text of givenScrambleTextField here
+    }
+
+    public void startGame(){
+        givenScrambleTextField.setText(currWord);
         setTimer();
     }
 
     public void endGame(){
-        userInputField.setEditable(false);
+        Object[] options = {"New Game", "Done"};
+		int n = JOptionPane.showOptionDialog(window, "Game over, thanks for playing! Do you want to play again?", "Game over!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+		System.out.println(n);
+        if(n == 1) {
+            window.dispose();
+        }
+        else {
+            resetBoardEndGame(); 
+            boardCounter = 0; 
+            player.setCurrScore(0);
+            scoreField.setText("Score: " + player.getCurrScore());
+            initializeKeys();
+            setTimer();
+        }
     }
 
     public void setTimer(){
@@ -130,7 +147,7 @@ public class GameManager {
         playerInfoPanel.setForeground(Color.white);
 
         // create GUI components for wordPanel - valid user inputted words and the result status
-        givenScrambleTextField = new JTextField("altred"); // TODO: autogenerate these words
+        givenScrambleTextField = new JTextField(currWord); // TODO: autogenerate these words
         givenScrambleTextField.setEditable(false);
         wordsInputtedTextArea = new JTextArea(200, 400);
         wordsInputtedTextArea.setEditable(false);
@@ -212,14 +229,23 @@ public class GameManager {
         currWord = keys.get(generateRandomNumber());
         // insert into validation set to allow for checks
         vc.insert(currWord);
+
+        givenScrambleTextField.setText(currWord);
     }
 
-    public void resetBoard() {
+    public void resetBoardEndGame() {
         // reset the GUI components of the board
         userInputField.setText("");
         wordsInputtedTextArea.setText("");
         resultTextField.setText("");
 
+        // set board to new word 
+        // remove this key from the arraylist when its used 
+        updateWord();
+    }
+    
+
+    public void resetBoard() {
         // update the board counter
         boardCounter++;
         // if the reset button has been hit 3 times, decrement the score by 5 and display the status
@@ -233,8 +259,7 @@ public class GameManager {
             resultTextField.setText("Board has been reset 3 times! You lose 5 points.");
         }
 
-        // set board to new word 
-        updateWord();
+        resetBoardEndGame();
         
     }
 
@@ -257,8 +282,7 @@ public class GameManager {
             // word is a valid dictionary word
             // word is at least three letters
        
-        //return vc.isValid(input);
-        return true;
+        return vc.isValid(input);
     }
 
 }

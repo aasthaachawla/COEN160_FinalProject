@@ -5,6 +5,18 @@ public class User implements java.io.Serializable {
     private int currScore;
     private String userLevel;
 
+    /* Constructor to create new User object*/
+    public User(String name, int currScore, String userLevel){
+        this.name = name;
+        this.currScore = currScore;
+        this.userLevel = userLevel;
+    }
+
+    /* Default Constructor */
+    public User() {
+        
+    }
+    /* Accessor and Mutator methods for private fields */
     public String getName(){
         return name;
     }
@@ -28,15 +40,4 @@ public class User implements java.io.Serializable {
     public void setUserLevel(String newLevel){
         userLevel = newLevel;
     }
-
-    public User(String name, int currScore, String userLevel){
-        this.name = name;
-        this.currScore = currScore;
-        this.userLevel = userLevel;
-    }
-
-    public User() {
-        
-    }
-
 }
