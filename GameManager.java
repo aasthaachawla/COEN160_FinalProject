@@ -85,7 +85,8 @@ public class GameManager {
         else {
             player = fm.checkIFUserExists(getUserInput);
             nameField.setText("Name: " + player.getName());
-            highScoreField.setText("High Score: " + player.getCurrScore() + " "); // change getCurrScore to getHighScore
+            highScoreField.setText("High Score: " + player.getHighScore() + " "); 
+            player.setCurrScore(0);
             currentScoreField.setText("Current Score: 0");
         }
         givenScrambleTextField.setText(currWord);
@@ -99,6 +100,7 @@ public class GameManager {
 		System.out.println(n);
         if(n == 1) {
             // update the stored object information on this user, serialize it.
+            player.setHighScore(maxScore());
             fm.updateUserObject(player);
             window.dispose();
         }
@@ -223,7 +225,7 @@ public class GameManager {
         }
         // if the word is invalid, tell the user, don't update the score
         else {
-            if((vc.isWordInputted(input))){
+            if((vc.isWordNotInputted(input))){
                 resultTextField.setForeground(Color.blue);
                 resultTextField.setText("This word has already been inputted! Try again.");
             }

@@ -8,9 +8,10 @@ public class User implements java.io.Serializable {
     private String userLevel;
 
     /* Constructor to create new User object*/
-    public User(String name, int currScore, String userLevel){
+    public User(String name, int currScore, int highScore, String userLevel){
         this.name = name;
         this.currScore = currScore;
+        this.highScore = highScore;
         this.userLevel = userLevel;
     }
 

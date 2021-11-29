@@ -26,7 +26,7 @@ public class ValidationCheck {
     }
 
     /* Ensure User is NOT inputting the same word */
-    private boolean isWordNotInputted(String word){
+    public boolean isWordNotInputted(String word){
         if(!wordsInputted.contains(word)) {
             wordsInputted.add(word);
             return true;

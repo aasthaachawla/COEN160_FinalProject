@@ -28,6 +28,7 @@ public class FileManager {
             if(userObjects.get(i).getName().equals(currPlayer.getName())) {
                 // find the specific userObject
                 userObjects.get(i).setCurrScore(currPlayer.getCurrScore());
+                userObjects.get(i).setHighScore(currPlayer.getHighScore());
                 userObjects.get(i).setUserLevel(currPlayer.getUserLevel());
                 serialize();
                 return;
@@ -41,13 +42,13 @@ public class FileManager {
             if(userObjects.get(i).getName().equals(name)) {
                 // player already exists
                 System.out.println("User exists");
-                System.out.println("score + " + userObjects.get(i).getCurrScore());
+                System.out.println("score + " + userObjects.get(i).getHighScore());
                 return userObjects.get(i);
             }
         }
         // player does not exist. create a new one.
         System.out.println("User does not exist");
-        User newPlayer = new User(name, 0, "beginner");
+        User newPlayer = new User(name, 0, 0, "beginner");
         userObjects.add(newPlayer);
         return newPlayer; 
     }
@@ -78,7 +79,7 @@ public class FileManager {
 
     public static void main(String[] args){
         FileManager fm = new FileManager();
-        User dummy = new User("dummy object", 1, "na");
+        User dummy = new User("dummy object", 1, 1, "na");
         fm.userObjects.add(dummy);
         fm.serialize();
         fm.checkIFUserExists("dummy object");
