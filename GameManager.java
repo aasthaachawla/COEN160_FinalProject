@@ -306,6 +306,11 @@ public class GameManager {
         return player.getCurrScore();
     }
 
+    // Updates user's highest score compared 
+    public int maxScore(){
+        return Math.max(player.getCurrScore(), player.getHighScore());
+    }
+
     public boolean validateWord(String input) {
         // call ValidationCheck to verify the inputted word matches all the criteria:
             // word does not utilize letters outside the options
