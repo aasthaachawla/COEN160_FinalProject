@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 
 public class User implements java.io.Serializable {
     private String name;
@@ -39,5 +40,15 @@ public class User implements java.io.Serializable {
 
     public void setUserLevel(String newLevel){
         userLevel = newLevel;
+    }
+
+    /* Overriden equals method to differentiate between User objects */ //TODO: not used...
+    @Override
+    public boolean equals(Object s) {
+        if(s instanceof User){
+            if(name.equals(((User) s).name))
+                return true;
+        }
+        return false;
     }
 }

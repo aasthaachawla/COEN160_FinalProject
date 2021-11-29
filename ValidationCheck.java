@@ -22,17 +22,21 @@ public class ValidationCheck {
         for(int i = 0; i < word.length(); i++) {
             if(!letters.contains(word.charAt(i))) return false;
         }
-        // make sure input is unique
-        isWordInputted(word);
         return true;
     }
 
     /* Ensure User is NOT inputting the same word */
-    private boolean isWordInputted(String word){
+    private boolean isWordNotInputted(String word){
         if(!wordsInputted.contains(word)) {
             wordsInputted.add(word);
             return true;
         } 
+        return false;
+    }
+
+    public boolean isWordInputted(String word){
+        System.out.println(word);
+        if(wordsInputted.contains(word)) return true;
         return false;
     }
 
@@ -56,7 +60,7 @@ public class ValidationCheck {
 
     /* Check if Valid Word --> all conditions met */
     public boolean isValid(String word) {
-        return inputValid(word) && wordExistsInDictionary(word);
+        return isWordNotInputted(word) && inputValid(word) && wordExistsInDictionary(word);
     }
 
     /* Reset Validation Check to empty Set */

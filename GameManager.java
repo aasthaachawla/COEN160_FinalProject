@@ -12,10 +12,13 @@ public class GameManager {
     private int boardCounter;
     private Timer timer;
     private String currWord;
+    private FileManager fm;
+    private boolean boardIntermediateLevel, boardAdvancedLevel;
 
     private ValidationCheck vc;
     private ArrayList<String> keys;
 
+    /* GUI private attributes */
     private JFrame window;
 	private JPanel topPanel;
     private JPanel playerInfoPanel;
@@ -34,12 +37,13 @@ public class GameManager {
     private JTextField userInputField;
     private JButton submitWord;
 
-    public GameManager(User player) {
-        this.player = player;
-        userLevel = player.getUserLevel();
+    public GameManager() {
+        fm = new FileManager();
         boardCounter = 0;
         keys = new ArrayList<String>();
         vc = new ValidationCheck();
+        boardIntermediateLevel = false; 
+        boardAdvancedLevel = false;
 
         // Randomly select a word from List of sample words
         initializeKeys();
@@ -57,6 +61,7 @@ public class GameManager {
             randomInt = rand.nextInt(keys.size()); 
         return randomInt;
     }
+
     public void initializeKeys(){
         keys.add("altred");
         keys.add("trasthig"); // straight
@@ -67,35 +72,32 @@ public class GameManager {
         // keys.add("DAGINOT");
     }
 
-    public void buildUser() {
+    /* Starts the GUI and builds a User/Player object. Sets all necessary attributes.*/
+    public void startGame(){
         buildGUI();
         // new User, send a JOptionPane to create this user.
         String getUserInput = JOptionPane.showInputDialog(topPanel, "Enter your name.");
         if(getUserInput == null){
             nameField.setText("Name: Guest");
-            scoreField.setText("Score: " + 0);
+            scoreField.setText("Score: 0");
         }
         else {
-            // TODO: retrieve User player and see if they exist
-            player.setName(getUserInput);
-            FileManager fm = new FileManager();
-            fm.deserialize(player);
-            // 
+            player = fm.checkIFUserExists(getUserInput);
             nameField.setText("Name: " + player.getName());
-            scoreField.setText("Score: " + player.getCurrScore());
+            scoreField.setText("Score: " + player.getCurrScore() + " ");
         }
-    }
-
-    public void startGame(){
         givenScrambleTextField.setText(currWord);
         setTimer();
     }
 
+    /* Offers the user an option to continue playing. Otherwise, ends the game and updates the stored information about User */
     public void endGame(){
         Object[] options = {"New Game", "Done"};
 		int n = JOptionPane.showOptionDialog(window, "Game over, thanks for playing! Do you want to play again?", "Game over!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 		System.out.println(n);
         if(n == 1) {
+            // update the stored object information on this user, serialize it.
+            fm.updateUserObject(player);
             window.dispose();
         }
         else {
@@ -114,11 +116,11 @@ public class GameManager {
             int i = 60;
 
             public void run() {
-                timerLabel.setText("\tTime left: " + i);
+                timerLabel.setText("Time left: " + i);
                 i--;
                 if (i < 0) {
                     timer.cancel();
-                    timerLabel.setText("\tTime Over");
+                    timerLabel.setText("Time Over");
                     resultTextField.setText("Game over! Thanks for playing.");
                     endGame();
                 }
@@ -130,20 +132,23 @@ public class GameManager {
         // instantiate JPanels and JFrame components 
         window = new JFrame();
 		topPanel = new JPanel(new BorderLayout());
-        playerInfoPanel = new JPanel(new BorderLayout());
+        playerInfoPanel = new JPanel(new GridLayout(0, 3));
         wordPanel = new JPanel(new BorderLayout());
         interactiveGamePanel = new JPanel(new BorderLayout());
 
         // create GUI components for the playerInfoPanel - name, score, and timer
-        nameField = new JTextField("Name: " + player.getName());
+        nameField = new JTextField("Name: " + "Guest");
         nameField.setEditable(false);
-        scoreField = new JTextField("Score: " + player.getCurrScore());
+        nameField.setHorizontalAlignment(JTextField.CENTER);
+        scoreField = new JTextField("Score: " + "0");
         scoreField.setEditable(false);
-        timerLabel = new JTextField("\t");
+        scoreField.setHorizontalAlignment(JTextField.CENTER);
+        timerLabel = new JTextField("");
         timerLabel.setEditable(false);
-        playerInfoPanel.add(nameField, BorderLayout.WEST);
-        playerInfoPanel.add(timerLabel, BorderLayout.CENTER);
-        playerInfoPanel.add(scoreField, BorderLayout.EAST);
+        timerLabel.setHorizontalAlignment(JTextField.CENTER);
+        playerInfoPanel.add(nameField);
+        playerInfoPanel.add(timerLabel);
+        playerInfoPanel.add(scoreField);
         playerInfoPanel.setForeground(Color.white);
 
         // create GUI components for wordPanel - valid user inputted words and the result status
@@ -204,6 +209,7 @@ public class GameManager {
         window.setVisible(true);
     }
 
+    /* update the score and word-input area when the user inputs a word */
     public void updateBoard(String input) {
         // validate if the word matches the rules
         if(validateWord(input)) {
@@ -213,13 +219,22 @@ public class GameManager {
         }
         // if the word is invalid, tell the user, don't update the score
         else {
-            resultTextField.setForeground(Color.red);
-            resultTextField.setText("This is not a valid word! Try again.");
+            if((vc.isWordInputted(input))){
+                resultTextField.setForeground(Color.blue);
+                resultTextField.setText("This word has already been inputted! Try again.");
+            }
+            else {
+                resultTextField.setForeground(Color.red);
+                resultTextField.setText("That is not a valid word! Try again.");
+            }
+            
         }
         // reset the user input field
         userInputField.setText("");
+        checkUserLevel();
     }
 
+    /* update the word on the board */
     public void updateWord(){
         // remove current word on board
         keys.remove(currWord);
@@ -229,12 +244,11 @@ public class GameManager {
         currWord = keys.get(generateRandomNumber());
         // insert into validation set to allow for checks
         vc.insert(currWord);
-
         givenScrambleTextField.setText(currWord);
     }
 
+    /* reset the GUI components of the board and the word */
     public void resetBoardEndGame() {
-        // reset the GUI components of the board
         userInputField.setText("");
         wordsInputtedTextArea.setText("");
         resultTextField.setText("");
@@ -244,7 +258,7 @@ public class GameManager {
         updateWord();
     }
     
-
+    /* resets the board when the resetBoard button is pressed */
     public void resetBoard() {
         // update the board counter
         boardCounter++;
@@ -259,8 +273,21 @@ public class GameManager {
             resultTextField.setText("Board has been reset 3 times! You lose 5 points.");
         }
 
-        resetBoardEndGame();
-        
+        resetBoardEndGame();   
+    }
+
+    /* Set user level based on their current score */
+    public void checkUserLevel() {
+        if(!boardIntermediateLevel && player.getCurrScore() >= 20 && player.getCurrScore() < 35){
+            player.setUserLevel("Intermediate");
+            JOptionPane.showMessageDialog(window, "Congratulations! You have advanced to intermediate level.");
+            boardIntermediateLevel = true;
+        }
+        else if(!boardAdvancedLevel && player.getCurrScore() >= 35 && player.getCurrScore() < 40) {
+            player.setUserLevel("Master");
+            JOptionPane.showMessageDialog(window, "Congratulations! You have advanced to master level.");
+            boardAdvancedLevel = true;
+        }
     }
 
     // For a specific word, user scores increases by x amt of points
@@ -281,7 +308,7 @@ public class GameManager {
             // word does not utilize letters outside the options
             // word is a valid dictionary word
             // word is at least three letters
-       
+        
         return vc.isValid(input);
     }
 

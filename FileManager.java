@@ -1,12 +1,16 @@
 import java.io.*;
+import java.util.*;
 
-public class FileManager {
-    public void serialize(User playerToSerialize) {
+public class FileManager {    
+    private ArrayList<User> userObjects = new ArrayList<>();
+
+    /* serialize the ArrayList of userObjects in a preexisting file */
+    public void serialize() {
         // Serialize instance via ObjectOutputStream
 		try {
 			FileOutputStream fileOut = new FileOutputStream("players.dat");
 			ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-			objectOut.writeObject(playerToSerialize);
+			objectOut.writeObject(userObjects);
 			objectOut.close();
 			fileOut.close();
 			
@@ -18,49 +22,65 @@ public class FileManager {
 
     }
 
-    private void checkIFUserExists(User out, User currentPlayer) {
-        if(out.getName().equals(currentPlayer.getName()) && out.getCurrScore() == currentPlayer.getCurrScore()) {
-            currentPlayer.setName(out.getName());
-            currentPlayer.setCurrScore(out.getCurrScore());
-            System.out.println("This player exists already");
-        }
-        else {
-            //serialize(currentPlayer);
-            System.out.println("This player does not exist yet.");
+    /* update the user object with their most up-to-date score and user level. */
+    public void updateUserObject(User currPlayer){
+        for(int i = 0; i<userObjects.size(); i++){
+            if(userObjects.get(i).getName().equals(currPlayer.getName())) {
+                // find the specific userObject
+                userObjects.get(i).setCurrScore(currPlayer.getCurrScore());
+                userObjects.get(i).setUserLevel(currPlayer.getUserLevel());
+                serialize();
+                return;
+            }
         }
     }
+    /* first method called -> check if a user already exists in the List. If not, add a new User object. */
+    public User checkIFUserExists(String name) {
+        deserialize();
+        for(int i = 0; i<userObjects.size(); i++){
+            if(userObjects.get(i).getName().equals(name)) {
+                // player already exists
+                System.out.println("User exists");
+                System.out.println("score + " + userObjects.get(i).getCurrScore());
+                return userObjects.get(i);
+            }
+        }
+        // player does not exist. create a new one.
+        System.out.println("User does not exist");
+        User newPlayer = new User(name, 0, "beginner");
+        userObjects.add(newPlayer);
+        return newPlayer; 
+    }
 
-    public void deserialize(User currentPlayer) {
+    /* deserialize the ArrayList of userObjects in a file */
+    public void deserialize() {
         // Deserialize and print output
 		try {
 			FileInputStream fileIn = new FileInputStream("players.dat");
 			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-			User out = (User) objectIn.readObject();
-			System.out.println("Deserialized output: " + out.getName() + " " + out.getCurrScore() + " " + out.getUserLevel());
-			
-            // check if user already exists in text file
-            checkIFUserExists(out, currentPlayer);
+
+            userObjects = (ArrayList) objectIn.readObject();
+
+            for(User u: userObjects)
+                System.out.println(u);
 
             objectIn.close();
 			fileIn.close();
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}	
+            	
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args){
         FileManager fm = new FileManager();
-        User dummy = new User("dummy object", 1, "no");
-        User dummy2 = new User("new dummy", 2, "no");
-        fm.serialize(dummy2);
-        fm.deserialize(dummy);
-        fm.deserialize(dummy2);
+        User dummy = new User("dummy object", 1, "na");
+        fm.userObjects.add(dummy);
+        fm.serialize();
+        fm.checkIFUserExists("dummy object");
     }
 }
-
-// TODO: check if we can append multiple players to this text file via instances of FileManager
