@@ -4,6 +4,7 @@ import java.util.*;
 public class User implements java.io.Serializable {
     private String name;
     private int currScore;
+    private int highScore;
     private String userLevel;
 
     /* Constructor to create new User object*/
@@ -42,6 +43,14 @@ public class User implements java.io.Serializable {
         userLevel = newLevel;
     }
 
+    public int getHighScore(){
+        return highScore;
+    }
+
+    public void setHighScore(int newScore){
+        highScore = newScore;
+    }
+    
     /* Overriden equals method to differentiate between User objects */ //TODO: not used...
     @Override
     public boolean equals(Object s) {
