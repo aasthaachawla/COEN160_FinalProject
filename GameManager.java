@@ -26,7 +26,8 @@ public class GameManager {
     private JPanel interactiveGamePanel;
 
     private JTextField nameField;
-    private JTextField scoreField;
+    private JTextField currentScoreField;
+    private JTextField highScoreField;
     private JTextField timerLabel;
 
     private JTextField givenScrambleTextField;
@@ -79,12 +80,13 @@ public class GameManager {
         String getUserInput = JOptionPane.showInputDialog(topPanel, "Enter your name.");
         if(getUserInput == null){
             nameField.setText("Name: Guest");
-            scoreField.setText("Score: 0");
+            currentScoreField.setText("Current Score: 0");
         }
         else {
             player = fm.checkIFUserExists(getUserInput);
             nameField.setText("Name: " + player.getName());
-            scoreField.setText("Score: " + player.getCurrScore() + " ");
+            highScoreField.setText("High Score: " + player.getCurrScore() + " "); // change getCurrScore to getHighScore
+            currentScoreField.setText("Current Score: 0");
         }
         givenScrambleTextField.setText(currWord);
         setTimer();
@@ -104,7 +106,8 @@ public class GameManager {
             resetBoardEndGame(); 
             boardCounter = 0; 
             player.setCurrScore(0);
-            scoreField.setText("Score: " + player.getCurrScore());
+            currentScoreField.setText("Current Score: " + player.getCurrScore());
+            // update high score and high score field 
             initializeKeys();
             setTimer();
         }
@@ -132,7 +135,7 @@ public class GameManager {
         // instantiate JPanels and JFrame components 
         window = new JFrame();
 		topPanel = new JPanel(new BorderLayout());
-        playerInfoPanel = new JPanel(new GridLayout(0, 3));
+        playerInfoPanel = new JPanel(new GridLayout(0, 4));
         wordPanel = new JPanel(new BorderLayout());
         interactiveGamePanel = new JPanel(new BorderLayout());
 
@@ -140,16 +143,19 @@ public class GameManager {
         nameField = new JTextField("Name: " + "Guest");
         nameField.setEditable(false);
         nameField.setHorizontalAlignment(JTextField.CENTER);
-        scoreField = new JTextField("Score: " + "0");
-        scoreField.setEditable(false);
-        scoreField.setHorizontalAlignment(JTextField.CENTER);
+        currentScoreField = new JTextField("Current Score: " + "0");
+        currentScoreField.setEditable(false);
+        currentScoreField.setHorizontalAlignment(JTextField.CENTER);
+        highScoreField = new JTextField("High Score: " + "0");
+        highScoreField.setEditable(false);
+        highScoreField.setHorizontalAlignment(JTextField.CENTER);
         timerLabel = new JTextField("");
         timerLabel.setEditable(false);
         timerLabel.setHorizontalAlignment(JTextField.CENTER);
         playerInfoPanel.add(nameField);
         playerInfoPanel.add(timerLabel);
-        playerInfoPanel.add(scoreField);
-        playerInfoPanel.setForeground(Color.white);
+        playerInfoPanel.add(highScoreField);
+        playerInfoPanel.add(currentScoreField);
 
         // create GUI components for wordPanel - valid user inputted words and the result status
         givenScrambleTextField = new JTextField(currWord); // TODO: autogenerate these words
@@ -161,7 +167,6 @@ public class GameManager {
         wordPanel.add(givenScrambleTextField, BorderLayout.NORTH);
         wordPanel.add(wordsInputtedTextArea, BorderLayout.CENTER);
         wordPanel.add(resultTextField, BorderLayout.SOUTH);
-        wordPanel.setForeground(Color.white);
 
         // create GUI components for interactiveGamePanel - buttons and text field for user to interact with
         refreshGame = new JButton("Refresh Game");
@@ -170,7 +175,6 @@ public class GameManager {
         interactiveGamePanel.add(refreshGame, BorderLayout.WEST);
         interactiveGamePanel.add(userInputField, BorderLayout.CENTER);
         interactiveGamePanel.add(submitWord, BorderLayout.EAST);
-        interactiveGamePanel.setForeground(Color.white);
 
         // add action listener to user input text field
         userInputField.addActionListener(new ActionListener() {
@@ -227,7 +231,6 @@ public class GameManager {
                 resultTextField.setForeground(Color.red);
                 resultTextField.setText("That is not a valid word! Try again.");
             }
-            
         }
         // reset the user input field
         userInputField.setText("");
@@ -267,7 +270,7 @@ public class GameManager {
             // score -= 5; // TODO: do we need this?
             // TODO: call updateUserScore in place of modifying here?
             player.setCurrScore(player.getCurrScore()-5);
-            scoreField.setText("Score: " + player.getCurrScore());
+            currentScoreField.setText("Current Score: " + player.getCurrScore());
             
             boardCounter = 0;
             resultTextField.setText("Board has been reset 3 times! You lose 5 points.");
@@ -295,7 +298,7 @@ public class GameManager {
         int currentSum = player.getCurrScore();
         currentSum += vc.assignPoints(input);
         player.setCurrScore(currentSum);
-        scoreField.setText("Score: " + player.getCurrScore());
+        currentScoreField.setText("Current Score: " + player.getCurrScore());
     }
 
     // Returns player's score at the end of the game
