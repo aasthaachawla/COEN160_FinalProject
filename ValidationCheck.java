@@ -22,7 +22,7 @@ public class ValidationCheck {
         for(int i = 0; i < word.length(); i++) {
             if(!letters.contains(word.charAt(i))) return false;
         }
-        return true;
+        return true && isWordNotInputted(word);
     }
 
     /* Ensure User is NOT inputting the same word */
@@ -60,7 +60,7 @@ public class ValidationCheck {
 
     /* Check if Valid Word --> all conditions met */
     public boolean isValid(String word) {
-        return isWordNotInputted(word) && inputValid(word) && wordExistsInDictionary(word);
+        return inputValid(word) && wordExistsInDictionary(word);
     }
 
     /* Reset Validation Check to empty Set */
