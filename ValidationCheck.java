@@ -16,7 +16,7 @@ public class ValidationCheck {
     }
 
     /* Determines if User has inputted letters only from validation set*/
-    private boolean inputValid(String word) {
+    public boolean inputValid(String word) {
         // Check to see if the word is at least 3 characters 
         if(word == null || word.length() < 3 || word.equals("")) return false;
         for(int i = 0; i < word.length(); i++) {
@@ -34,14 +34,14 @@ public class ValidationCheck {
         return false;
     }
 
-    public boolean isWordInputted(String word){
-        System.out.println(word);
-        if(wordsInputted.contains(word)) return true;
-        return false;
-    }
+    // public boolean isWordInputted(String word){
+    //     System.out.println(word);
+    //     if(wordsInputted.contains(word)) return true;
+    //     return false;
+    // }
 
     /* Check if user word input is an english word in the dictionary */
-    private boolean wordExistsInDictionary(String word) {
+    public boolean wordExistsInDictionary(String word) {
         try {
             BufferedReader in = new BufferedReader(new FileReader(
                     "words_alpha.txt"));
@@ -63,11 +63,11 @@ public class ValidationCheck {
         return inputValid(word) && wordExistsInDictionary(word);
     }
 
-    /* Reset Validation Check to empty Set */
+    /* Reset to prepare for new letters */
     public void removeCharacters() {
         letters.clear();
     }
-
+    
     /* Return number of points based on the length of word */
     public int assignPoints(String word) {
         return word.length();

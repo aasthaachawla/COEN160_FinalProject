@@ -8,7 +8,6 @@ import java.awt.event.*;
 
 public class GameManager {
     private User player;
-    private String userLevel;
     private int boardCounter;
     private Timer timer;
     private String currWord;
@@ -225,7 +224,10 @@ public class GameManager {
         }
         // if the word is invalid, tell the user, don't update the score
         else {
-            if((vc.isWordNotInputted(input))){
+            if((!vc.wordExistsInDictionary(input))){
+                resultTextField.setForeground(Color.blue);
+                resultTextField.setText("That's not a real english word! Try again.");
+            } else if (!vc.isWordNotInputted(input)) {
                 resultTextField.setForeground(Color.blue);
                 resultTextField.setText("This word has already been inputted! Try again.");
             }
@@ -313,12 +315,12 @@ public class GameManager {
         return Math.max(player.getCurrScore(), player.getHighScore());
     }
 
-    public boolean validateWord(String input) {
-        // call ValidationCheck to verify the inputted word matches all the criteria:
-            // word does not utilize letters outside the options
-            // word is a valid dictionary word
-            // word is at least three letters
-        
+    /* Call ValidationCheck to verify the inputted word matches all the criteria:
+    * word does not utilize letters outside the options
+    * word is a valid dictionary word
+    * word is at least three letters 
+    */
+    public boolean validateWord(String input) {        
         return vc.isValid(input);
     }
 
