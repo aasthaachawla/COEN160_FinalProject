@@ -101,18 +101,21 @@ public class GameManager {
         howToPlay();
         givenScrambleTextField.setForeground(Color.black);
         setTimer();
+        userInputField.setText("");
+        userInputField.setForeground(Color.black);
     }
 
     /* Offers the user an option to continue playing. Otherwise, ends the game and updates the stored information about User */
     public void endGame(){
+        // update the stored object information on this user provided they are not a guest, and serialize it.
+        player.setHighScore(maxScore());
+        if(!player.getName().equals("Guest"))
+            fm.updateUserObject(player);
+
         Object[] options = {"New Game", "Done"};
 		int n = JOptionPane.showOptionDialog(window, "Game over, thanks for playing! Do you want to play again?", "Game over!", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 		System.out.println(n);
         if(n == 1) {
-            // update the stored object information on this user provided they are not a guest, and serialize it.
-            player.setHighScore(maxScore());
-            if(!player.getName().equals("Guest"))
-                fm.updateUserObject(player);
             window.dispose();
         }
         else {
@@ -120,6 +123,7 @@ public class GameManager {
             boardCounter = 0; 
             player.setCurrScore(0);
             currentScoreField.setText("Current Score: " + player.getCurrScore());
+            highScoreField.setText("High Score: " + player.getHighScore());
             // update high score and high score field 
             initializeKeys();
             setTimer();
@@ -154,19 +158,27 @@ public class GameManager {
         timerAndWordPanel = new JPanel(new GridLayout(2, 0));
         descriptionPanel = new JPanel(new BorderLayout());
 
+        // fonts
+        Font regularTextFont = new Font("SansSerif", Font.PLAIN, 16);
+        Font wordFont = new Font("SansSerif", Font.BOLD, 20);
+        Font resultsFont = new Font("SansSerif", Font.ITALIC, 14);
+
         // create GUI components for the playerInfoPanel - name, score, and description
         nameField = new JTextField("Name: " + "Guest");
         nameField.setEditable(false);
         nameField.setHorizontalAlignment(JTextField.CENTER);
         nameField.setBackground(Color.decode("#CCDCFD"));
+        nameField.setFont(regularTextFont);
         currentScoreField = new JTextField("Current Score: " + "0");
         currentScoreField.setEditable(false);
         currentScoreField.setHorizontalAlignment(JTextField.CENTER);
         currentScoreField.setBackground(Color.decode("#CCDCFD"));
+        currentScoreField.setFont(regularTextFont);
         highScoreField = new JTextField("High Score: " + "0");
         highScoreField.setEditable(false);
         highScoreField.setHorizontalAlignment(JTextField.CENTER);
         highScoreField.setBackground(Color.decode("#CCDCFD"));
+        highScoreField.setFont(regularTextFont);
         playerInfoPanel.add(nameField);
         playerInfoPanel.add(currentScoreField);
         playerInfoPanel.add(highScoreField);
@@ -177,6 +189,7 @@ public class GameManager {
         timerLabel.setHorizontalAlignment(JTextField.CENTER);
         timerLabel.setBackground(Color.decode("#CCDCFD"));
         timerLabel.setForeground(Color.black);
+        timerLabel.setFont(regularTextFont);
         timerAndWordPanel.add(timerLabel);
         timerAndWordPanel.add(playerInfoPanel);
         timerAndWordPanel.setBackground(Color.decode("#9EA3F5"));
@@ -187,12 +200,15 @@ public class GameManager {
         givenScrambleTextField.setHorizontalAlignment(JTextField.CENTER);
         givenScrambleTextField.setForeground(Color.decode("#BBBEFE"));
         givenScrambleTextField.setBackground(Color.decode("#BBBEFE"));
+        givenScrambleTextField.setFont(wordFont);
         wordsInputtedTextArea = new JTextArea(200, 400);
         wordsInputtedTextArea.setEditable(false);
         wordsInputtedTextArea.setBackground(Color.decode("#CCDCFD"));
-        resultTextField = new JTextField();
+        wordsInputtedTextArea.setFont(regularTextFont);
+        resultTextField = new JTextField("");
         resultTextField.setEditable(false);
         resultTextField.setBackground(Color.decode("#BBBEFE"));
+        resultTextField.setFont(resultsFont);
         wordPanel.add(givenScrambleTextField, BorderLayout.NORTH);
         wordPanel.add(wordsInputtedTextArea, BorderLayout.CENTER);
         wordPanel.add(resultTextField, BorderLayout.SOUTH);
@@ -205,6 +221,9 @@ public class GameManager {
         descriptionPanel.add(refreshGame, BorderLayout.EAST);
         descriptionPanel.setBackground(Color.decode("#9EA3F5"));
         userInputField = new JTextField("", 100);
+        userInputField.setText("Enter words here");
+        userInputField.setForeground(Color.lightGray);
+        userInputField.setFont(regularTextFont);
         submitWord = new JButton("Submit");
         interactiveGamePanel.add(descriptionPanel, BorderLayout.WEST);
         interactiveGamePanel.add(userInputField, BorderLayout.CENTER);
