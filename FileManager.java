@@ -1,3 +1,10 @@
+/** 
+ * Program Description: The following class works to serialize and deserialize user objects 
+ * and store different users and their scores: 
+ * (1) Checks If User Already Exists
+ * (2) Updates User Object
+ * (3) Creates New User with Name, Level, and Score attributes
+ */
 import java.io.*;
 import java.util.*;
 

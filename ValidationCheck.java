@@ -1,3 +1,11 @@
+/** 
+ * Program Description: The following class checks if the user’s input meets all the requirements: 
+ * (1) Word must be at least 3 letters
+ * (2) Word cannot be inputted more than once
+ * (3) Word must be a real english word
+ * (4) Word must only contain letters from displayed characters 
+ */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

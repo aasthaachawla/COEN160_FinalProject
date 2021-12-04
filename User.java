@@ -1,3 +1,8 @@
+/**
+ * Program Description: The following class defines the User object: 
+ * (1) Holds values unique to each user
+ * (2) Attributes include: name, current score, high score, and level
+ */
 import java.io.*;
 import java.util.*;
 
@@ -50,15 +55,5 @@ public class User implements java.io.Serializable {
 
     public void setHighScore(int newScore){
         highScore = newScore;
-    }
-    
-    /* Overriden equals method to differentiate between User objects */ 
-    @Override
-    public boolean equals(Object s) {
-        if(s instanceof User){
-            if(name.equals(((User) s).name))
-                return true;
-        }
-        return false;
     }
 }

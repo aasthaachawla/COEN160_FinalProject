@@ -1,3 +1,12 @@
+/** 
+ * Program Description: The following class runs the GUI and bridges together the different functionalities of the game: 
+ * (1) Start, End, Reset Game Functionalities
+ * (2) Display Error Feature
+ * (3) Store User's Name and Highest Score
+ * (4) Assign User Level based on threshold
+ * (5) Overall Game "Look & Feel"
+ */
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
