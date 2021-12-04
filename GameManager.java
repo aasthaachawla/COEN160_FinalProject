@@ -68,8 +68,8 @@ public class GameManager {
 
     public void initializeKeys(){
         keys.add("altred");
-        keys.add("trasthig"); // straight
-        keys.add("copiduce"); // occupied
+        keys.add("trasthig"); 
+        keys.add("copiduce"); 
         keys.add("bacgikn");
         keys.add("daginot");
         keys.add("ipantca");
@@ -276,7 +276,7 @@ public class GameManager {
 
     /* show how to play before game */
     public void howToPlay() {
-        JOptionPane.showMessageDialog(window, "You have 60 seconds to list as many words that can be created \nwith the letters you are given (and repeated letters are allowed). \nIn this time, you can press the “Refresh Board” button to change the set of letters. If the \n“Refresh Board” button is pressed 3 times, you will lose 5 points. \nIf you choose to login, you must play through a full game in order for your score to be stored. \nRules: \n- You must create words that are at least 3 letters in length, and you must provide unique words \n- any reused words will not increment points. \n- Points are assigned based on the number of letters in the word.", "Rules", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(window, "You have 60 seconds to list as many words that can be created with the letters \nyou are given (and repeated letters are allowed). \nIn this time, you can press the “Refresh Board” button to change the set of letters. If the \n“Refresh Board” button is pressed 3 times, you will lose 5 points. \nIf you choose to login, you must play through a full game in order for your score to be stored. \nRules: \n- You must create words that are at least 3 letters in length, and you must provide unique words \n- any reused words will not increment points. \n- Points are assigned based on the number of letters in the word.", "Rules", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /* update the score and word-input area when the user inputs a word */

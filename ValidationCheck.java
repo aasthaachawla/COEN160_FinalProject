@@ -34,12 +34,6 @@ public class ValidationCheck {
         return false;
     }
 
-    // public boolean isWordInputted(String word){
-    //     System.out.println(word);
-    //     if(wordsInputted.contains(word)) return true;
-    //     return false;
-    // }
-
     /* Check if user word input is an english word in the dictionary */
     public boolean wordExistsInDictionary(String word) {
         try {

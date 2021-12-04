@@ -77,6 +77,7 @@ public class FileManager {
         }
     }
 
+    // for testing purposes, the file needs to not be empty: 
     public static void main(String[] args){
         FileManager fm = new FileManager();
         User dummy = new User("dummy object", 1, 1, "na");

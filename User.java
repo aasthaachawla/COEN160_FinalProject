@@ -52,7 +52,7 @@ public class User implements java.io.Serializable {
         highScore = newScore;
     }
     
-    /* Overriden equals method to differentiate between User objects */ //TODO: not used...
+    /* Overriden equals method to differentiate between User objects */ 
     @Override
     public boolean equals(Object s) {
         if(s instanceof User){
